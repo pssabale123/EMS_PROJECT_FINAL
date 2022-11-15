@@ -104,3 +104,23 @@ export const deleteStudentPaper = (id) => (dispatch, getState) => {
     )
     .catch((err) => console.log(err));
 };
+
+export const patchStudentPapers = (data) => (dispatch, getState) => {
+  // console.log("Action",data);
+  axios
+    .patch(
+      apiEndPoint + "/" + data._id,
+      {
+        _id: data._id,
+        totalAttempt: data.totalAttempt,
+        totalCorrect: data.totalCorrect,
+        obtainMarks: data.obtainMarks,
+        status: "submitted",
+      },
+      { headers: { "x-auth-token": getState().loginReducer.token } }
+    )
+    .then((response) =>
+      dispatch({ type: actions.PATCH_STUDENT_PAPER, payload: response.data })
+    )
+    .catch((err) => console.log(err));
+};

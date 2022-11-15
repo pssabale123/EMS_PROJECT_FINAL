@@ -3,18 +3,18 @@ import { toast } from "react-toastify";
 import * as actions from "./actionTypes";
 const apiEndPoint = process.env.REACT_APP_API_URL + "login";
 
-const loginSuccess = () => {
-  toast.success("LogIn....", {
-    position: "top-center",
-  });
-};
+// const loginSuccess = () => {
+//   toast.success("LogIn....", {
+//     position: "top-center",
+//   });
+// };
 
 export const loginAction = (data) => (dispatch) => {
   axios
     .post(apiEndPoint, data)
     .then((response) => {
       sessionStorage.setItem("token", response.data);
-      loginSuccess();
+      // loginSuccess();
       dispatch({
         type: actions.LOGIN_USER,
         payload: response.data,

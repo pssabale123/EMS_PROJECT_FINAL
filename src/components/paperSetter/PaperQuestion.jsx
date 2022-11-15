@@ -147,7 +147,7 @@ const PaperQuestion = () => {
               transform: "translate(-50%,-50%)",
             }}
           >
-            <div className="w-[75%] mx-auto  pb-4  bg-black/40 ">
+            <div className="w-[60%] mx-auto  pb-4  bg-black/40 ">
               <div className="flex justify-end p-3">
                 <IoClose
                   className="cursor-pointer text-center flex justify-end rounded-full text-red-500 bg-white hover:bg-yellow-400"

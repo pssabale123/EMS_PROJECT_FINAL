@@ -59,7 +59,10 @@ import CreateOption, {
 import UpdateOption, { getOptionId } from "./components/examiner/UpdateOption";
 import PaperDetails from "./components/student/paperDetails";
 import { Result } from "postcss";
-import StudentResult, { getAnswers } from "./components/student/StudentResult";
+import StudentResult, {
+  getAnswers,
+  getPaperIdForStudentAnswers,
+} from "./components/student/StudentResult";
 
 const router = createBrowserRouter([
   {
@@ -261,7 +264,8 @@ const router = createBrowserRouter([
           //   // element: <StudentResult />,
           // },
           {
-            path: "result",
+            path: "result/:paperId",
+            loader: getPaperIdForStudentAnswers,
             element: <StudentResult />,
           },
           {

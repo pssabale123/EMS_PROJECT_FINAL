@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { getAllStudentPapers } from "../../actions/studentPaperAction";
 import jwt_decode from "jwt-decode";
 import { useState } from "react";
+import { getAllStudentAnswers } from "../../actions/studentAnswerAction";
+import { set } from "lodash";
 
 function PaperDetails(props) {
   const { SetpaperId } = props;
@@ -12,14 +14,20 @@ function PaperDetails(props) {
   const token = useSelector((state) => state.loginReducer.token);
   const decode = jwt_decode(token);
   const [assign, setAssign] = useState(false);
+  const [present, setPresent] = useState(false);
   const studentPaperArr = [];
 
   let studentPapers = useSelector(
     (state) => state.studentPaperReducer.studentPapers
   );
 
+  let studentAnswers = useSelector(
+    (state) => state.studentAnswerReducer.studentAnswers
+  );
+
   useEffect(() => {
     dispatch(getAllStudentPapers());
+    dispatch(getAllStudentAnswers());
   }, []);
 
   const handleStartExam = (id) => {
@@ -36,7 +44,16 @@ function PaperDetails(props) {
     });
   });
 
+  studentAnswers = studentAnswers?.filter((a) => a.student?._id == decode._id);
   // console.log("assign", assign);
+
+  // studentPapers.map((p) => {
+  //   studentAnswers.map((a) => {
+  //     if (p.paper?._id == a.paperQuestion?.paper?._id) {
+  //       setPresent(true);
+  //     }
+  //   });
+  // });
 
   return assign ? (
     <>
@@ -51,12 +68,21 @@ function PaperDetails(props) {
                   </div>
                   <div className="flex w-full justify-end px-5 ">
                     {/* <NavLink to={"examPaper"}> */}
-                    <button
-                      className="bg-[#FFD630] flex mx-2 p-1 px-5 font-bold rounded-2xl hover:text-white focus:bg-green-400"
-                      onClick={() => handleStartExam(p.paper._id)}
-                    >
-                      Start Exam
-                    </button>
+                    {p.status != "submitted" ? (
+                      <button
+                        className="bg-[#FFD630] flex mx-2 p-1 px-5 font-bold rounded-2xl hover:text-white focus:bg-green-400"
+                        onClick={() => handleStartExam(p.paper._id)}
+                      >
+                        Start Exam
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-red-600 flex mx-2 p-1 px-5 font-bold rounded-2xl hover:text-white focus:bg-red-600"
+                        // onClick={() => handleStartExam(p.paper._id)}
+                      >
+                        Submitted
+                      </button>
+                    )}
                     {/* </NavLink> */}
                   </div>
                 </div>

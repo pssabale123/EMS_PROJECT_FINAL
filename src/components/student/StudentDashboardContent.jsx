@@ -1,25 +1,23 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { MdAdd } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { getCurrentPaper } from "../../actions/paperAction";
-import ExamPaper from "./ExamPaper";
 import PaperDetails from "./paperDetails";
 
 function StudentDashboardContent() {
-  const [paperId, SetpaperId] = useState(0);
-  console.log("paperid", paperId);
+  const [paperId, SetpaperId] = useState("");
+  // console.log("paperid ", paperId);
   const location = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getCurrentPaper(paperId));
+    if (paperId) dispatch(getCurrentPaper(paperId));
   }, [paperId]);
 
   const paper = useSelector((state) => state.paperReducer.currentPaper);
-  console.log("paper", paper);
+  // console.log("paper", paper);
 
   return (
     <div className="px-4 h-full">

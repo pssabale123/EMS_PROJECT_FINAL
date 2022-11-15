@@ -42,6 +42,7 @@ export const deletePaper = (id) => (dispatch, getState) => {
 };
 
 export const getCurrentPaper = (id) => (dispatch, getState) => {
+  console.log("idddd", id);
   axios
     .get(apiEndPoint + "/" + id)
     .then((response) =>

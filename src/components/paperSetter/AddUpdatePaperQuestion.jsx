@@ -10,6 +10,7 @@ import {
   getCurrentQuestion,
   updateQuestion,
 } from "../../actions/questionAction";
+import { toast } from "react-toastify";
 
 export function getPaperQuestionId({ params }) {
   // console.log("params", params);
@@ -24,6 +25,20 @@ const schema = yup.object().shape({
   complexityLevel: yup.string().required(),
   // subjectId: yup.string().required(),
 });
+
+const AddPaperQuestionToast = () => {
+  toast.success("Question is added to PaperQuestion....", {
+    position: "top-center",
+    autoClose: 800,
+  });
+};
+
+const updatePaperQuestionToast = () => {
+  toast.warn("Question is updated....", {
+    position: "top-center",
+    autoClose: 800,
+  });
+};
 
 function AddUpdateQuestion() {
   const {
@@ -73,10 +88,12 @@ function AddUpdateQuestion() {
     if (!questionId) {
       console.log("data", data);
       dispatch(addQuestion(data));
+      AddPaperQuestionToast();
       navigate("/paperSetter/paperQuestions");
     } else {
       console.log(data);
       dispatch(updateQuestion(data));
+      updatePaperQuestionToast();
       navigate("/paperSetter/paperQuestions");
     }
   };

@@ -38,6 +38,22 @@ export const studentPaperReducer = (
       return state;
     }
 
+    case actions.PATCH_STUDENT_PAPER: {
+      console.log(action.payload);
+      const f = state.studentPapers.map((s) => {
+        if (s._id === action.payload._id) {
+          s._id = action.payload._id;
+          s.totalMarks = action.payload.totalMarks;
+          s.totalCorrect = action.payload.totalCorrect;
+          s.obtainMarks = action.payload.obtainMarks;
+          s.status = action.payload.status;
+        }
+        return s;
+      });
+
+      return { ...state, studentPapers: f };
+    }
+
     case actions.DELETE_STUDENT_PAPER: {
       const filteredData = state.studentPapers.filter(
         (s) => s._id !== action.payload._id
@@ -47,7 +63,7 @@ export const studentPaperReducer = (
     }
 
     case actions.GET_CURRENT_STUDENT_PAPER: {
-      console.log("Reducer", action.payload);
+      // console.log("Reducer", action.payload);
       return { ...state, currentStudentPaper: action.payload };
     }
 

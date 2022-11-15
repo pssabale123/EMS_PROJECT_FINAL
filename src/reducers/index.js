@@ -8,6 +8,7 @@ import { paperQuestionReducer } from "./paperQuestionReducer";
 import { studentPaperReducer } from "./studentPaperReducer";
 import { loginReducer } from "./loginReducer";
 import { answerOptionReducer } from "./answerOptionReducer";
+import { studentAnswerReducer } from "./studentAnswerReducer";
 
 export default combineReducers({
   subjectReducer,
@@ -19,4 +20,5 @@ export default combineReducers({
   studentPaperReducer,
   loginReducer,
   answerOptionReducer,
+  studentAnswerReducer,
 });

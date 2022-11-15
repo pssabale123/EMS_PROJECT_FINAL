@@ -11,11 +11,26 @@ import {
   updatePaper,
 } from "../../actions/paperAction";
 import { useLoaderData, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export function getPaperId({ params }) {
   const paperId = params.paperId;
   return paperId;
 }
+
+const AddPaperToast = (data) => {
+  toast.success(data + " paper is added....", {
+    position: "top-center",
+    autoClose: 800,
+  });
+};
+
+const updatePaperToast = (data) => {
+  toast.warn(data + " Paper is updated....", {
+    position: "top-center",
+    autoClose: 800,
+  });
+};
 
 function AddUpdatePaper() {
   const paperId = useLoaderData();
@@ -59,11 +74,13 @@ function AddUpdatePaper() {
       console.log(data);
 
       dispatch(addPaper(data));
+      AddPaperToast(data.name);
 
       navigate("/paperSetter/papers");
     } else {
       console.log("update", data);
       dispatch(updatePaper(data));
+      updatePaperToast(data.name);
       navigate("/paperSetter/papers");
     }
   };

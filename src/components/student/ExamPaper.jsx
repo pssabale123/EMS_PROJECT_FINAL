@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllSubjects } from "../../actions/subjectAction";
 import { getAllQuestions } from "../../actions/questionAction";
@@ -12,6 +9,7 @@ import {
 import { Navigate, Outlet, useLoaderData, useNavigate } from "react-router-dom";
 import { getAllOptions } from "../../actions/answerOptionAction";
 import jwt_decode from "jwt-decode";
+import { addArrayOfStudentAnswers } from "../../actions/studentAnswerAction";
 
 export function getPaperIdForQuestion({ params }) {
   // console.log("params", params);
@@ -66,19 +64,18 @@ const ExamPaper = () => {
   };
 
   const handleSubmit = () => {
-    console.log("submit");
-    console.log("ffffg", answers);
+    // console.log("submit");
+
+    answers.forEach((ele) => {
+      dispatch(addArrayOfStudentAnswers(ele));
+    });
+
+    navigate(`/student/result/${paperId}`);
+    // console.log("ffffg", answers);
   };
 
   return (
     <>
-      {/* <div className="h-10 w-full bg-[#172337] text-slate-300 flex items-center justify-between pl-4 pr-24">
-        <>
-          <span>Test Questions</span>
-          <span>Total Marks</span>
-        </>
-      </div> */}
-
       <div className="h-full h-cover mt-3">
         {paperQuestions.map((q, index) => {
           return (

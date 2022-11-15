@@ -17,6 +17,7 @@ import {
   getCurrentStudentPaper,
   updateStudentPaper,
 } from "../../actions/studentPaperAction";
+import { toast } from "react-toastify";
 
 export function getStudentPaperId({ params }) {
   // console.log("params", params);
@@ -28,6 +29,20 @@ const schema = yup.object().shape({
   paperId: yup.string().required(),
   studentId: yup.string().required(),
 });
+
+const addStudentPaperToast = (data) => {
+  toast.success(data + " gets assigned the paper.....", {
+    position: "top-center",
+    autoClose: 800,
+  });
+};
+
+const updateStudentPaperToast = (data) => {
+  toast.warn("paper was reassigned to " + data + "...", {
+    position: "top-center",
+    autoClose: 800,
+  });
+};
 
 function AddUpdateStudentPaper() {
   const dispatch = useDispatch();
@@ -70,10 +85,12 @@ function AddUpdateStudentPaper() {
     if (!studentPaperId) {
       console.log(data);
       dispatch(addStudentPaper(data));
+      addStudentPaperToast(studentPaper?.student?.firstName);
       navigate("/paperSetter/studentPapers");
     } else {
       console.log(data);
       dispatch(updateStudentPaper(data));
+      updateStudentPaperToast(studentPaper?.student?.firstName);
       navigate("/paperSetter/studentPapers");
     }
   };
