@@ -6,6 +6,7 @@ const {
   StudentAnswer,
   validateStudentAnswer,
 } = require("../Model/studentAnswersModel");
+const { StudentPaper } = require("../Model/studentPaperModel");
 const { User } = require("../Model/userModel");
 
 // const jwt_decode = require("jwt-decode");
@@ -29,6 +30,11 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  // const studentAnswers = await StudentAnswer.deleteMany({});
+  // console.log(studentAnswers);
+
+  // await studentAnswers.save();
+
   const { error } = validateStudentAnswer(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -60,12 +66,35 @@ router.post("/", async (req, res) => {
     answer: req.body.answer,
     isCorrect: req.body.isCorrect,
   });
+  //
+  const session = await StudentAnswer.startSession();
 
-  await studentAnswer.save();
-  res.status(200).send(studentAnswer);
-  // } catch (err) {
-  //   res.send(err);
-  // }
+  session.startTransaction();
+
+  try {
+    await studentAnswer.save();
+
+    await StudentPaper.updateOne(
+      {
+        "student._id": req.body.studentId,
+        "paper._id": paperQuestion.paper._id,
+      },
+      { $set: { status: "inProgress" } },
+      { new: true }
+    );
+
+    res.status(200).send(studentAnswer);
+  } catch (err) {
+    session.abortTransaction();
+    throw err;
+  }
+  session.commitTransaction();
+  session.endSession();
+
+  //
+
+  // await studentAnswer.save();
+  // res.status(200).send(studentAnswer);
 });
 
 router.put("/:id", async (req, res) => {

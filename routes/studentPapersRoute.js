@@ -105,7 +105,7 @@ router.post("/", async (req, res) => {
     status: req.body.status,
     totalAttempt: req.body.totalAttempt,
     obtainMarks: req.body.obtainMarks,
-    totalCorrect: req.body.totalCorrect,  
+    totalCorrect: req.body.totalCorrect,
   });
 
   await studentPaper.save();
@@ -149,11 +149,37 @@ router.put("/:id", async (req, res) => {
     { new: true }
   );
 
-  if (!studentPaper) {
-    return res.status(404).send("studentPaper with given id is not found....");
-  }
+  //
 
-  res.status(200).send(studentPaper);
+  const session = await StudentPaper.startSession();
+
+  session.startTransaction();
+
+  try {
+    await studentPaper.save();
+
+    if (studentPaper.status == "assigned") {
+      await StudentAnswer.deleteMany({
+        "student._id": req.body.studentId,
+        "paperQuestion.paper._id": req.body.paperId,
+      });
+    }
+
+    res.status(200).send(studentPaper);
+  } catch (err) {
+    session.abortTransaction();
+    throw err;
+  }
+  session.commitTransaction();
+  session.endSession();
+
+  //
+
+  // if (!studentPaper) {
+  //   return res.status(404).send("studentPaper with given id is not found....");
+  // }
+
+  // res.status(200).send(studentPaper);
 });
 
 router.delete("/:id", async (req, res) => {
@@ -165,10 +191,26 @@ router.delete("/:id", async (req, res) => {
 
   res.status(200).send(studentPaper);
 });
-// router.patch("/:id",async(req,res)=>{
+router.patch("/:id", async (req, res) => {
+  const { totalAttempt, totalCorrect, obtainMarks, status } = req.body;
 
-//   const studentAnswer =await StudentAnswer.findById()
+  // console.log("Action",);
 
-// })
+  const studentPaper = await StudentPaper.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        totalAttempt: totalAttempt,
+        totalCorrect: totalCorrect,
+        obtainMarks: obtainMarks,
+        status: status,
+      },
+    },
+    { new: true }
+  );
+
+  if (!studentPaper) return res.status(400).send("Unbale to Update");
+  return res.status(200).send(studentPaper);
+});
 
 module.exports = router;
